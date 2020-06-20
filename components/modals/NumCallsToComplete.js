@@ -31,6 +31,7 @@ const NumCallsToComplete = ({
         </View>
         <Button
           title="Save"
+          color="firebrick"
           onPress={() => {
             if (numCallsComp < 1) {
               setNumCallsComp('' + 1);

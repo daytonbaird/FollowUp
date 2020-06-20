@@ -218,9 +218,7 @@ const SettingsPage = ({route}) => {
         <View style={styles.settingsDisplay}>
           <Text style={styles.settingsDisplayText}>Notification Time</Text>
           <Text style={styles.settingsDisplayText}>
-            <Text style={styles.settingsDisplayText}>
-              {prettyNotificationTime}
-            </Text>
+            {prettyNotificationTime}
           </Text>
         </View>
         <View style={styles.settingsEditView}>
@@ -263,7 +261,6 @@ const SettingsPage = ({route}) => {
             trackColor={{true: 'firebrick'}}
           />
         </View>
-        <View style={styles.settingsEditView} />
       </View>
       {/* Show Called People */}
       <View style={styles.settingsView}>

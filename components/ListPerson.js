@@ -13,7 +13,7 @@ moment().format();
 const LeftActions = ({progress, dragX}) => {
   return (
     <View style={styles.swLeft}>
-      <Text style={styles.swLeftText}>Called!</Text>
+      <Text style={styles.swLeftText}>Followed up!</Text>
     </View>
   );
 };
@@ -30,9 +30,9 @@ const RightActions = ({progress, dragX, onPress}) => {
 const ListPerson = ({
   person,
   navigation,
-  screenName,
   onSwipeFromLeft,
   onRightPress,
+  updatePerson,
 }) => {
   const [due, setDue] = useState(false);
   const [soon, setSoon] = useState(false);
@@ -123,8 +123,9 @@ const ListPerson = ({
       )}>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate(screenName, {
+          navigation.navigate('Person Info', {
             person: person,
+            updatePerson: updatePerson,
           })
         }
         style={styles.pListItem}>

@@ -27,6 +27,9 @@ import AddPersonButton from './components/AddPersonButton';
 import PersonCreator from './components/pages/PersonCreator';
 import PersonInfo from './components/pages/PersonInfo';
 import SettingsPage from './components/pages/SettingsPage';
+import AboutPage from './components/pages/AboutPage';
+import TermsPage from './components/pages/TermsPage';
+import EditPage from './components/pages/EditPage';
 
 //Styling
 import {styles} from './styles/global';
@@ -184,6 +187,20 @@ const HomeScreen = ({navigation}) => {
     navigation.navigate('Follow Up');
   };
 
+  const updatePerson = person => {
+    let dbEntry = realm.objectForPrimaryKey('Person', person.id);
+    realm.write(() => {
+      dbEntry.name = person.name;
+      dbEntry.hireDate = person.hireDate;
+      dbEntry.storeNum = person.storeNum;
+      dbEntry.notes = person.notes;
+      dbEntry.callsCompleted = person.callsCompleted;
+      dbEntry.nextCallDate = person.nextCallDate;
+      dbEntry.complete = person.complete;
+    });
+    refreshState();
+  };
+
   //Update Call #s in database
   const updateCallNumDb = person => {
     let dbEntry = realm.objectForPrimaryKey('Person', person.id);
@@ -268,7 +285,7 @@ const HomeScreen = ({navigation}) => {
   const moreInfoActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Cancel', 'Settings', 'About', 'Terms of Use'],
+        options: ['Cancel', 'Settings', 'About', 'Terms and Conditions'],
         cancelButtonIndex: 0,
       },
       buttonIndex => {
@@ -279,9 +296,9 @@ const HomeScreen = ({navigation}) => {
             defaultSettings: defaultSettings,
           });
         } else if (buttonIndex === 2) {
-          //About
+          navigation.navigate('About');
         } else if (buttonIndex === 3) {
-          //Terms and Conditions
+          navigation.navigate('Terms');
         }
       },
     );
@@ -321,8 +338,8 @@ const HomeScreen = ({navigation}) => {
             return (
               <ListPerson
                 person={item}
+                updatePerson={updatePerson}
                 navigation={navigation}
-                screenName={'Person Info'}
                 onSwipeFromLeft={() => updateCallNum(item)}
                 onRightPress={() => deletePerson(item.id)}
               />
@@ -333,7 +350,7 @@ const HomeScreen = ({navigation}) => {
                 <ListPerson
                   person={item}
                   navigation={navigation}
-                  screenName={'Person Info'}
+                  updatePerson={updatePerson}
                   onSwipeFromLeft={() => updateCallNum(item)}
                   onRightPress={() => deletePerson(item.id)}
                 />
@@ -363,6 +380,9 @@ const App = () => {
         <Stack.Screen name="Add a Person" component={PersonCreator} />
         <Stack.Screen name="Person Info" component={PersonInfo} />
         <Stack.Screen name="Settings" component={SettingsPage} />
+        <Stack.Screen name="About" component={AboutPage} />
+        <Stack.Screen name="Terms" component={TermsPage} />
+        <Stack.Screen name="Edit Person" component={EditPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

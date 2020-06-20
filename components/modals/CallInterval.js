@@ -96,6 +96,7 @@ const CallInterval = ({
         </View>
         <Button
           title="Save"
+          color="firebrick"
           onPress={() => {
             createNewCallInterval(callNum, callFreq.freq);
             saveCallFreq(callFreq.freq);

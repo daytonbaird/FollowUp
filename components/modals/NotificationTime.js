@@ -42,6 +42,7 @@ const NotificationTime = ({
         />
         <Button
           title="Save"
+          color="firebrick"
           onPress={() => {
             setMinutes(userTime.getMinutes());
             setHours(userTime.getHours());
