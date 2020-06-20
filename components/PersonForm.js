@@ -5,10 +5,11 @@ import {
   Button,
   TextInput,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Keyboard,
   View,
 } from 'react-native';
-import {Formik} from 'formik';
+import {Formik, ErrorMessage} from 'formik';
 import * as yup from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -18,17 +19,16 @@ import {styles} from '../styles/global';
 const personSchema = yup.object({
   name: yup
     .string()
-    .required()
-    .min(2),
-  storeNum: yup
-    .number()
-    .required()
-    .min(1),
-  hireDate: yup.date().required(),
+    .required('Required')
+    .min(2, 'Name is too short'),
+  location: yup.string().min(1, 'Too short'),
+  startDate: yup.date().required('Required'),
   notes: yup.string(),
 });
 
 const PersonForm = ({addPerson}) => {
+  const oneMonthMs = 2592000000;
+
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
@@ -42,7 +42,7 @@ const PersonForm = ({addPerson}) => {
 
   return (
     <Formik
-      initialValues={{name: '', storeNum: '', hireDate: null, notes: ''}}
+      initialValues={{name: '', location: '', startDate: date, notes: ''}}
       validationSchema={personSchema}
       onSubmit={(values, actions) => {
         actions.resetForm();
@@ -66,15 +66,40 @@ const PersonForm = ({addPerson}) => {
               {formikProps.touched.name && formikProps.errors.name}
             </Text>
 
+            <View style={styles.pCreatorDateInput}>
+              <Text style={styles.pCreatorDateText}>Start Date</Text>
+              <Text style={styles.pCreatorDateContent}>
+                {date.toLocaleDateString()}
+              </Text>
+            </View>
+            <View style={styles.personSmEditView}>
+              <TouchableOpacity onPress={showDatePicker}>
+                <Text style={styles.pCreatorDateBtnSm}>edit</Text>
+              </TouchableOpacity>
+            </View>
+
+            {show && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                is24Hour="true"
+                maximumDate={Date.now() + oneMonthMs}
+                onChange={(e, selectedDate) => {
+                  setDate(selectedDate);
+                  formikProps.handleChange('startDate');
+                  formikProps.values.startDate = selectedDate; //passed as an object. Need to convert to .getTime()
+                }}
+              />
+            )}
+
             <TextInput
               style={styles.pCreatorInput}
-              placeholder="Store #*"
-              onChangeText={formikProps.handleChange('storeNum')}
-              value={formikProps.values.storeNum}
-              keyboardType="number-pad"
+              placeholder="Location"
+              onChangeText={formikProps.handleChange('location')}
+              value={formikProps.values.location}
             />
             <Text style={styles.pErrorText}>
-              {formikProps.touched.storeNum && formikProps.errors.storeNum}
+              {formikProps.touched.location && formikProps.errors.location}
             </Text>
 
             <TextInput
@@ -85,29 +110,6 @@ const PersonForm = ({addPerson}) => {
             />
             <Text style={styles.pErrorText}>
               {formikProps.touched.notes && formikProps.errors.notes}
-            </Text>
-
-            <Button
-              title="Select Hire Date"
-              color="firebrick"
-              onPress={showDatePicker}
-            />
-
-            {show && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                is24Hour="true"
-                // maximumDate={Date.now()}
-                onChange={(e, selectedDate) => {
-                  setDate(selectedDate);
-                  formikProps.handleChange('hireDate');
-                  formikProps.values.hireDate = selectedDate; //passed as an object. Need to convert to .getTime()
-                }}
-              />
-            )}
-            <Text style={styles.pErrorText}>
-              {formikProps.touched.hireDate && formikProps.errors.hireDate}
             </Text>
 
             <Button

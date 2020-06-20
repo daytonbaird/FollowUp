@@ -30,6 +30,9 @@ const NotificationTime = ({
       backdropOpacity={0.3}
       onBackdropPress={() => toggleNotifVisible()}>
       <View style={styles.defaultModalView}>
+        <View style={styles.modalHeaderView}>
+          <Text style={styles.modalHeader}>Notification Time</Text>
+        </View>
         <DateTimePicker
           value={userTime}
           mode="time"

@@ -21,16 +21,24 @@ import EditPerson from '../modals/EditPerson';
 const PersonInfo = ({route, navigation}) => {
   const {person} = route.params;
   const {updatePerson} = route.params;
+  const {deletePerson} = route.params;
+  const {undoContact} = route.params;
+
   const [isEditVisible, setEditVisible] = useState(false);
+  let isComplete = person.complete;
 
   const toggleEditVisible = () => {
     setEditVisible(previousState => !previousState);
   };
 
+  const navToFollowUp = () => {
+    navigation.navigate('Follow Up');
+  };
+
   const personInfoActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Cancel', 'Edit Person', 'Undo Follow-Up', 'Delete Person'],
+        options: ['Cancel', 'Edit Person', 'Undo Contact', 'Delete Person'],
         cancelButtonIndex: 0,
         destructiveButtonIndex: 3,
       },
@@ -38,9 +46,9 @@ const PersonInfo = ({route, navigation}) => {
         if (buttonIndex === 1) {
           toggleEditVisible();
         } else if (buttonIndex === 2) {
-          //Undo Follow-Up
+          undoContact(person);
         } else if (buttonIndex === 3) {
-          //Delete
+          deletePerson(person.id, navToFollowUp);
         }
       },
     );
@@ -60,8 +68,8 @@ const PersonInfo = ({route, navigation}) => {
     });
   };
 
-  let neatHireDate = new Date(person.hireDate);
-  let neatNextDate = new Date(person.nextCallDate);
+  let neatStartDate = new Date(person.startDate);
+  let neatNextDate = new Date(person.nextContactDate);
 
   const generatePrettyNotificationTime = (notifTimeHrs, notifTimeMins) => {
     let prettyTime;
@@ -104,42 +112,55 @@ const PersonInfo = ({route, navigation}) => {
         <Text style={styles.personInfoHeader}>{person.name}</Text>
       </View>
 
-      {/* Hire Date */}
+      {/* Start Date */}
       <View style={styles.personInfoView}>
         <Text style={styles.personInfoText}>
-          Hire Date:{' '}
+          Start Date:{' '}
           <Text style={styles.personInfoDetails}>
-            {neatHireDate.toDateString()}
+            {neatStartDate.toDateString()}
           </Text>{' '}
         </Text>
       </View>
 
-      {/* Store Number */}
+      {/* Location */}
       <View style={styles.personInfoView}>
         <Text style={styles.personInfoText}>
-          Store Number:{' '}
-          <Text style={styles.personInfoDetails}>{person.storeNum}</Text>{' '}
+          Location:{' '}
+          <Text style={styles.personInfoDetails}>{person.location}</Text>{' '}
         </Text>
       </View>
 
-      {/* Calls Completed*/}
+      {/* Follow-Ups Completed*/}
       <View style={styles.personInfoView}>
         <Text style={styles.personInfoText}>
-          Calls Completed:{' '}
-          <Text style={styles.personInfoDetails}>{person.callsCompleted}</Text>{' '}
+          Contacts Completed:{' '}
+          <Text style={styles.personInfoDetails}>
+            {person.contactsCompleted}
+          </Text>{' '}
         </Text>
       </View>
 
-      {/* Next Call Date*/}
-      <View style={styles.personInfoView}>
-        <Text style={styles.personInfoText}>
-          Next Call:{' '}
-          <Text
-            style={
-              styles.personInfoDetails
-            }>{`${neatNextDate.toLocaleDateString()} @ ${neatNextDateTime}`}</Text>{' '}
-        </Text>
-      </View>
+      {/* Next Contact Date*/}
+      {!isComplete && (
+        <View style={styles.personInfoView}>
+          <Text style={styles.personInfoText}>
+            Next Contact:{' '}
+            <Text
+              style={
+                styles.personInfoDetails
+              }>{`${neatNextDate.toLocaleDateString()} @ ${neatNextDateTime}`}</Text>{' '}
+          </Text>
+        </View>
+      )}
+
+      {isComplete && (
+        <View style={styles.personInfoView}>
+          <Text style={styles.personInfoText}>
+            Next Contact:{' '}
+            <Text style={styles.personInfoDetails}>{`Done!`}</Text>{' '}
+          </Text>
+        </View>
+      )}
 
       {/* Notes*/}
       <View style={styles.personInfoView}>

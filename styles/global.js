@@ -14,12 +14,34 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     borderRadius: 6,
   },
-  pErrorText: {
-    color: 'crimson',
+  pCreatorDateInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 6,
+    padding: '3.8%',
     fontSize: 20,
-    fontWeight: 'bold',
-    padding: 5,
-    textAlign: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  pCreatorDateText: {
+    fontSize: 20,
+    color: 'darkgray',
+  },
+  pCreatorDateContent: {
+    fontSize: 20,
+  },
+  pCreatorDateBtnSm: {
+    color: 'firebrick',
+    fontSize: 16,
+    paddingBottom: '1%',
+    alignContent: 'flex-end',
+  },
+  pErrorText: {
+    color: 'firebrick',
+    fontSize: 16,
+    paddingLeft: '3.8%',
+    paddingTop: '1%',
+    paddingBottom: '1%',
   },
   pCreatorHeader: {
     paddingTop: '5%',
@@ -187,6 +209,9 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
   },
 
+  scrollViewBox: {
+    height: '95%',
+  },
   //About Page
   aboutView: {
     paddingBottom: '5%',
@@ -268,11 +293,26 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  editDefaultModalView: {
+    backgroundColor: 'white',
+    padding: '5%',
+    justifyContent: 'center',
+    borderRadius: 15,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
   editText: {
     fontSize: 20,
     color: 'firebrick',
+    paddingTop: '2%',
   },
-  editDisplayText: {
+  editDateView: {
+    paddingTop: '2%',
+  },
+  editDateHeaderText: {
+    fontSize: 20,
+    color: 'firebrick',
+  },
+  editDateContent: {
     fontSize: 20,
   },
   dualEditTextInput: {
@@ -290,7 +330,7 @@ export const styles = StyleSheet.create({
     padding: '5%',
     fontSize: 20,
   },
-  numCallsModalView: {
+  numContactsModalView: {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -303,5 +343,12 @@ export const styles = StyleSheet.create({
   editPersonRowView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  modalHeaderView: {
+    alignItems: 'center',
+  },
+  modalHeader: {
+    fontSize: 20,
+    color: 'firebrick',
   },
 });

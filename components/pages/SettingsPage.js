@@ -15,8 +15,8 @@ import {
 
 //Components
 import NotificationTime from '../modals/NotificationTime';
-import CallInterval from '../modals/CallInterval';
-import NumCallsToComplete from '../modals/NumCallsToComplete';
+import ContactInterval from '../modals/ContactInterval';
+import NumContactsToComplete from '../modals/NumContactsToComplete';
 
 //Styling
 import {styles} from '../../styles/global';
@@ -50,28 +50,28 @@ const SettingsPage = ({route}) => {
     convertBool(userSettings.createPushNotifications),
   );
 
-  const [prettyShowCalledPersons, setPrettyShowCalledPersons] = useState(
-    convertBool(userSettings.showCalledPersons),
+  const [prettyShowContactedPersons, setPrettyShowContactedPersons] = useState(
+    convertBool(userSettings.showContactedPersons),
   );
-  const [prettyCallInterval, setPrettyCallInterval] = useState('');
-  const [prettyCallFreq, setPrettyCallFreq] = useState('');
+  const [prettyContactInterval, setPrettyContactInterval] = useState('');
+  const [prettyContactFreq, setPrettyContactFreq] = useState('');
   const [prettyNotificationTime, setPrettyNotificaitonTime] = useState('');
 
   const [isNotifVisible, setIsNotifVisible] = useState(false);
-  const [isCallVisible, setIsCallVisible] = useState(false);
-  const [isNumCallVisible, setIsNumCallVisible] = useState(false);
+  const [isContactVisible, setIsContactVisible] = useState(false);
+  const [isNumContactVisible, setIsNumContactVisible] = useState(false);
 
   //Modal control functions
   const toggleNotifVisible = () => {
     setIsNotifVisible(previousState => !previousState);
   };
 
-  const toggleCallVisible = () => {
-    setIsCallVisible(previousState => !previousState);
+  const toggleContactVisible = () => {
+    setIsContactVisible(previousState => !previousState);
   };
 
-  const toggleNumCallVisible = () => {
-    setIsNumCallVisible(previousState => !previousState);
+  const toggleNumContactVisible = () => {
+    setIsNumContactVisible(previousState => !previousState);
   };
 
   //Switch Control Functions
@@ -79,12 +79,12 @@ const SettingsPage = ({route}) => {
     setPrettyCreatePushNotifs(previousState => !previousState);
   };
 
-  const togglePrettyShowCalledPeople = () => {
-    setPrettyShowCalledPersons(previousState => !previousState);
+  const togglePrettyShowContactedPeople = () => {
+    setPrettyShowContactedPersons(previousState => !previousState);
   };
 
   //
-  const generatePrettyCallInterval = (msGiven, freq) => {
+  const generatePrettyContactInterval = (msGiven, freq) => {
     if (freq === 'days') {
       return msGiven / oneDayMs;
     }
@@ -138,19 +138,22 @@ const SettingsPage = ({route}) => {
     updateSettings({createPushNotifications: !current});
   };
 
-  const updateShowCalledPersons = current => {
-    updateSettings({showCalledPersons: !current});
+  const updateShowContactedPersons = current => {
+    updateSettings({showContactedPersons: !current});
   };
 
-  const generateCallInterval = () => {
-    setPrettyCallInterval(
-      generatePrettyCallInterval(
-        userSettings.callInterval,
-        userSettings.callIntervalFreq,
+  const generateContactInterval = () => {
+    setPrettyContactInterval(
+      generatePrettyContactInterval(
+        userSettings.contactInterval,
+        userSettings.contactIntervalFreq,
       ),
     );
-    setPrettyCallFreq(
-      generatePrettyFreq(prettyCallInterval, userSettings.callIntervalFreq),
+    setPrettyContactFreq(
+      generatePrettyFreq(
+        prettyContactInterval,
+        userSettings.contactIntervalFreq,
+      ),
     );
   };
 
@@ -160,8 +163,8 @@ const SettingsPage = ({route}) => {
     if (!prettyCreatePushNotifs) {
       togglePrettyCreatePushNotifs();
     }
-    if (prettyShowCalledPersons) {
-      togglePrettyShowCalledPeople();
+    if (prettyShowContactedPersons) {
+      togglePrettyShowContactedPeople();
     }
   };
   useEffect(() => {
@@ -169,18 +172,18 @@ const SettingsPage = ({route}) => {
       userSettings.notificaitonTimeHrs,
       userSettings.notificaitonTimeMins,
     );
-    generateCallInterval();
+    generateContactInterval();
   });
 
   return (
     <ScrollView>
-      <CallInterval
-        isVisible={isCallVisible}
-        toggleCallVisible={toggleCallVisible}
+      <ContactInterval
+        isVisible={isContactVisible}
+        toggleContactVisible={toggleContactVisible}
         userSettings={userSettings}
         updateSettings={updateSettings}
-        generatePrettyCallInterval={generatePrettyCallInterval}
-        generateCallIntervalState={generateCallInterval}
+        generatePrettyContactInterval={generatePrettyContactInterval}
+        generateContactIntervalState={generateContactInterval}
       />
       <NotificationTime
         isVisible={isNotifVisible}
@@ -188,27 +191,27 @@ const SettingsPage = ({route}) => {
         updateSettings={updateSettings}
         generatePrettyNotificationTime={generatePrettyNotificationTime}
       />
-      <NumCallsToComplete
-        isVisible={isNumCallVisible}
-        toggleNumCallVisible={toggleNumCallVisible}
+      <NumContactsToComplete
+        isVisible={isNumContactVisible}
+        toggleNumContactVisible={toggleNumContactVisible}
         updateSettings={updateSettings}
-        numCallsToComplete={userSettings.numCallsToComplete}
+        numContactsToComplete={userSettings.numContactsToComplete}
       />
       {/* Header */}
       <View style={styles.settingsHeaderView}>
         <Text style={styles.settingsHeader}>Settings</Text>
       </View>
-      {/* Call Interval */}
+      {/* Contact Interval */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>Call Interval</Text>
+          <Text style={styles.settingsDisplayText}>Contact Interval</Text>
           <Text
             style={
               styles.settingsDisplayText
-            }>{`${prettyCallInterval} ${prettyCallFreq}`}</Text>
+            }>{`${prettyContactInterval} ${prettyContactFreq}`}</Text>
         </View>
         <View style={styles.settingsEditView}>
-          <TouchableOpacity onPress={toggleCallVisible}>
+          <TouchableOpacity onPress={toggleContactVisible}>
             <Text style={styles.settingsBtn}>edit</Text>
           </TouchableOpacity>
         </View>
@@ -227,20 +230,18 @@ const SettingsPage = ({route}) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* Number Calls Before Completed */}
+      {/* Number Contacts Before Completed */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>
-            Number Calls to Complete
-          </Text>
+          <Text style={styles.settingsDisplayText}>Contacts to Complete</Text>
           <Text style={styles.settingsDisplayText}>
             <Text style={styles.settingsDisplayText}>
-              {userSettings.numCallsToComplete}
+              {userSettings.numContactsToComplete}
             </Text>
           </Text>
         </View>
         <View style={styles.settingsEditView}>
-          <TouchableOpacity onPress={toggleNumCallVisible}>
+          <TouchableOpacity onPress={toggleNumContactVisible}>
             <Text style={styles.settingsBtn}>edit</Text>
           </TouchableOpacity>
         </View>
@@ -262,18 +263,18 @@ const SettingsPage = ({route}) => {
           />
         </View>
       </View>
-      {/* Show Called People */}
+      {/* Show Contacted People */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>Show Called People</Text>
+          <Text style={styles.settingsDisplayText}>Show Contacted People</Text>
           <Switch
             onValueChange={() => {
-              togglePrettyShowCalledPeople();
-              updateShowCalledPersons(prettyShowCalledPersons);
+              togglePrettyShowContactedPeople();
+              updateShowContactedPersons(prettyShowContactedPersons);
               updateUserSettings();
               alert('Saved! Restart your app to see changes.');
             }}
-            value={prettyShowCalledPersons}
+            value={prettyShowContactedPersons}
             trackColor={{true: 'firebrick'}}
           />
         </View>

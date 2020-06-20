@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActionSheetIOS,
   Settings,
+  Alert,
 } from 'react-native';
 import {v4 as uuidv4} from 'uuid';
 import {NavigationContainer} from '@react-navigation/native';
@@ -28,8 +29,7 @@ import PersonCreator from './components/pages/PersonCreator';
 import PersonInfo from './components/pages/PersonInfo';
 import SettingsPage from './components/pages/SettingsPage';
 import AboutPage from './components/pages/AboutPage';
-import TermsPage from './components/pages/TermsPage';
-import EditPage from './components/pages/EditPage';
+import PrivacyPage from './components/pages/PrivacyPage';
 
 //Styling
 import {styles} from './styles/global';
@@ -46,24 +46,24 @@ let realm = new Realm(databaseOptions);
 //"Home Screen" for Navigation
 const HomeScreen = ({navigation}) => {
   const defaultSettings = {
-    callInterval: 2419200000,
-    callIntervalFreq: 'weeks',
+    contactInterval: 2419200000,
+    contactIntervalFreq: 'weeks',
     notificationTimeHrs: 16,
     notificationTimeMins: 0,
-    numCallsToComplete: 3,
+    numContactsToComplete: 3,
     createPushNotifications: true,
-    showCalledPersons: false,
+    showContactedPersons: false,
   };
 
   const getUserSettings = () => {
     return {
-      callInterval: Settings.get('callInterval'),
-      callIntervalFreq: Settings.get('callIntervalFreq'),
+      contactInterval: Settings.get('contactInterval'),
+      contactIntervalFreq: Settings.get('contactIntervalFreq'),
       notificaitonTimeHrs: Settings.get('notificationTimeHrs'),
       notificaitonTimeMins: Settings.get('notificationTimeMins'),
-      numCallsToComplete: Settings.get('numCallsToComplete'),
+      numContactsToComplete: Settings.get('numContactsToComplete'),
       createPushNotifications: Settings.get('createPushNotifications'),
-      showCalledPersons: Settings.get('showCalledPersons'),
+      showContactedPersons: Settings.get('showContactedPersons'),
     };
   };
 
@@ -105,66 +105,133 @@ const HomeScreen = ({navigation}) => {
   }
 
   //Delete person from database & state
-  const deletePerson = personId => {
-    deletePersonFromState(personId);
-    deleteFromDB(personId);
+  const deletePerson = (personId, callback) => {
+    Alert.alert(
+      'Confirm',
+      'Are you sure you wish to delete this person?',
+      [
+        {
+          text: 'No',
+          onPress: () => null,
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            deletePersonFromState(personId);
+            deleteFromDB(personId);
+            cancelContactNotification(personId); //Cancels any notifications pending
+            if (callback) {
+              callback();
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
-  //Assigns first call on person creation
-  const assignFirstCall = (person, interval) => {
-    const hireDateTime = person.hireDate.getTime();
-    let nextCallDateWithNotif = new Date(hireDateTime + interval);
-    person.nextCallDate = nextCallDateWithNotif.setHours(
+  //Assigns first contact on person creation
+  const assignFirstContact = (person, interval) => {
+    const startDateTime = person.startDate.getTime();
+    let nextContactDateWithNotif = new Date(startDateTime + interval);
+    person.nextContactDate = nextContactDateWithNotif.setHours(
       userSettings.notificaitonTimeHrs,
       userSettings.notificaitonTimeMins,
       0,
     );
-    person.nextCallDate = nextCallDateWithNotif;
-    scheduleCallNotification(
+    person.nextContactDate = nextContactDateWithNotif;
+    person.previousContactDate = new Date(nextContactDateWithNotif);
+    scheduleContactNotification(
       person,
       userSettings.notificaitonTimeHrs,
       userSettings.notificaitonTimeMins,
     );
   };
 
-  //Assigns next call date for each person
-  //Maybe assigns push notifications too?
-  const assignNextCall = (person, interval) => {
-    const nextCallTime = person.nextCallDate.getTime();
+  //Assigns next contact date for each person
+  const assignNextContact = (person, interval) => {
+    let now = new Date();
+    let nextContactTime = person.nextContactDate.getTime();
+
+    //If the next contact time has already surpassed
+    if (nextContactTime < now) {
+      nextContactTime = new Date();
+      nextContactTime.setHours(
+        userSettings.notificaitonTimeHrs,
+        userSettings.notificaitonTimeMins,
+        0,
+      );
+      nextContactTime = nextContactTime.getTime();
+    }
 
     let dbEntry = realm.objectForPrimaryKey('Person', person.id);
     realm.write(() => {
-      dbEntry.nextCallDate = new Date(nextCallTime + interval);
+      dbEntry.previousContactDate = person.nextContactDate;
+      dbEntry.nextContactDate = new Date(nextContactTime + interval);
     });
   };
 
-  //Handler for calls
-  const assignCalls = person => {
-    if (person.callsCompleted < userSettings.numCallsToComplete) {
-      cancelCallNotification(person.id);
-      assignNextCall(person, userSettings.callInterval);
-      scheduleCallNotification(
-        person,
-        userSettings.notificaitonTimeHrs,
-        userSettings.notificaitonTimeMins,
-      );
+  //Handler for contacts.
+  const assignContacts = person => {
+    let now = new Date();
+    if (person.contactsCompleted < userSettings.numContactsToComplete) {
+      cancelContactNotification(person.id); //Cancels old contact notification
+      assignNextContact(person, userSettings.contactInterval);
+      if (!person.nextContactDate.getTime() < now) {
+        scheduleContactNotification(
+          person,
+          userSettings.notificaitonTimeHrs,
+          userSettings.notificaitonTimeMins,
+        );
+      }
     } else {
-      assignNextCall(person, longAssTime);
+      assignNextContact(person, longAssTime);
       let dbEntry = realm.objectForPrimaryKey('Person', person.id);
       realm.write(() => {
         dbEntry.complete = true;
       });
-      // refreshState();
       console.log(person.complete);
+    }
+  };
+
+  const undoContact = person => {
+    let previousContactDate = person.previousContactDate;
+    let nextContactDate = person.nextContactDate;
+    let contactInterval = userSettings.contactInterval;
+
+    if (person.contactsCompleted > 0) {
+      let dbEntry = realm.objectForPrimaryKey('Person', person.id);
+      realm.write(() => {
+        if (person.complete) {
+          dbEntry.complete = false;
+        }
+        dbEntry.undoneContact = true;
+        dbEntry.nextContactDate = previousContactDate;
+        dbEntry.previousContactDate = new Date(
+          previousContactDate - contactInterval,
+        );
+        previousContactDate - dbEntry.contactsCompleted--;
+      });
+      cancelContactNotification(person.id);
+      scheduleContactNotification(
+        person,
+        userSettings.notificaitonTimeHrs,
+        userSettings.notificaitonTimeMins,
+      );
+      navigation.navigate('Follow Up');
+      refreshState();
+    } else {
+      alert('Error: You have not contacted this person.');
     }
   };
 
   //Assign metadata to person
   const assignPersonInfo = person => {
     person.id = uuidv4();
-    person.callsCompleted = 0;
+    person.contactsCompleted = 0;
     person.complete = false;
-    assignFirstCall(person, userSettings.callInterval);
+    assignFirstContact(person, userSettings.contactInterval);
   };
 
   //Add person to state & db
@@ -174,11 +241,12 @@ const HomeScreen = ({navigation}) => {
       realm.create('Person', {
         name: person.name,
         id: person.id,
-        hireDate: person.hireDate,
-        storeNum: person.storeNum,
+        startDate: person.startDate,
+        location: person.location,
         notes: person.notes,
-        callsCompleted: person.callsCompleted,
-        nextCallDate: person.nextCallDate,
+        contactsCompleted: person.contactsCompleted,
+        nextContactDate: person.nextContactDate,
+        previousContactDate: person.previousContactDate,
         complete: person.complete,
       });
     });
@@ -191,35 +259,35 @@ const HomeScreen = ({navigation}) => {
     let dbEntry = realm.objectForPrimaryKey('Person', person.id);
     realm.write(() => {
       dbEntry.name = person.name;
-      dbEntry.hireDate = person.hireDate;
-      dbEntry.storeNum = person.storeNum;
+      dbEntry.startDate = person.startDate;
+      dbEntry.location = person.location;
       dbEntry.notes = person.notes;
-      dbEntry.callsCompleted = person.callsCompleted;
-      dbEntry.nextCallDate = person.nextCallDate;
+      dbEntry.contactsCompleted = person.contactsCompleted;
+      dbEntry.nextContactDate = person.nextContactDate;
       dbEntry.complete = person.complete;
     });
     refreshState();
   };
 
-  //Update Call #s in database
-  const updateCallNumDb = person => {
+  //Update Contact #s in database
+  const updateContactNumDb = person => {
     let dbEntry = realm.objectForPrimaryKey('Person', person.id);
     realm.write(() => {
-      dbEntry.callsCompleted++;
+      dbEntry.contactsCompleted++;
     });
   };
 
-  //Updates the call # for a person in the database and then refreshes the state
-  const updateCallNum = person => {
-    updateCallNumDb(person);
-    assignCalls(person);
+  //Updates the contact # for a person in the database and then refreshes the state
+  const updateContactNum = person => {
+    updateContactNumDb(person);
+    assignContacts(person);
     refreshState();
   };
 
   //Pulls database and adds it to the state
   const dbToState = () => {
     let dbPersons = realm.objects('Person');
-    dbPersons = dbPersons.sorted('nextCallDate', true);
+    dbPersons = dbPersons.sorted('nextContactDate', true);
     dbPersons.forEach((object, index) => {
       addPersonToState(object);
     });
@@ -259,10 +327,12 @@ const HomeScreen = ({navigation}) => {
     });
   };
 
-  const scheduleCallNotification = (person, hrs, mins) => {
+  const scheduleContactNotification = (person, hrs, mins) => {
+    let now = new Date();
     if (!userSettings.createPushNotifications) return;
+    if (person.nextContactDate.getTime() < now) return;
 
-    let scheduledNotif = new Date(person.nextCallDate.getTime());
+    let scheduledNotif = new Date(person.nextContactDate.getTime());
     scheduledNotif.setHours(hrs, mins, 0);
 
     PushNotification.localNotificationSchedule({
@@ -274,7 +344,7 @@ const HomeScreen = ({navigation}) => {
     });
   };
 
-  const cancelCallNotification = personId => {
+  const cancelContactNotification = personId => {
     PushNotification.cancelLocalNotifications({id: personId});
   };
 
@@ -285,7 +355,7 @@ const HomeScreen = ({navigation}) => {
   const moreInfoActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Cancel', 'Settings', 'About', 'Terms and Conditions'],
+        options: ['Cancel', 'Settings', 'About', 'Privacy Policy'],
         cancelButtonIndex: 0,
       },
       buttonIndex => {
@@ -298,7 +368,7 @@ const HomeScreen = ({navigation}) => {
         } else if (buttonIndex === 2) {
           navigation.navigate('About');
         } else if (buttonIndex === 3) {
-          navigation.navigate('Terms');
+          navigation.navigate('Privacy Policy');
         }
       },
     );
@@ -318,7 +388,7 @@ const HomeScreen = ({navigation}) => {
     });
   };
 
-  //Called once upon page load
+  //Contacted once upon page load
   useEffect(() => {
     checkIfFirstLaunch();
     updateUserSettings();
@@ -334,16 +404,31 @@ const HomeScreen = ({navigation}) => {
       <FlatList
         data={persons}
         renderItem={({item}) => {
-          if (userSettings.showCalledPersons) {
-            return (
-              <ListPerson
-                person={item}
-                updatePerson={updatePerson}
-                navigation={navigation}
-                onSwipeFromLeft={() => updateCallNum(item)}
-                onRightPress={() => deletePerson(item.id)}
-              />
-            );
+          if (userSettings.showContactedPersons) {
+            if (!item.complete) {
+              return (
+                <ListPerson
+                  person={item}
+                  updatePerson={updatePerson}
+                  deletePerson={deletePerson}
+                  undoContact={undoContact}
+                  navigation={navigation}
+                  onSwipeFromLeft={() => updateContactNum(item)}
+                  onRightPress={() => deletePerson(item.id)}
+                />
+              );
+            } else {
+              return (
+                <ListPerson
+                  person={item}
+                  deletePerson={deletePerson}
+                  updatePerson={updatePerson}
+                  undoContact={undoContact}
+                  navigation={navigation}
+                  onRightPress={() => deletePerson(item.id)}
+                />
+              );
+            }
           } else {
             if (!item.complete) {
               return (
@@ -351,7 +436,9 @@ const HomeScreen = ({navigation}) => {
                   person={item}
                   navigation={navigation}
                   updatePerson={updatePerson}
-                  onSwipeFromLeft={() => updateCallNum(item)}
+                  deletePerson={deletePerson}
+                  undoContact={undoContact}
+                  onSwipeFromLeft={() => updateContactNum(item)}
                   onRightPress={() => deletePerson(item.id)}
                 />
               );
@@ -381,8 +468,7 @@ const App = () => {
         <Stack.Screen name="Person Info" component={PersonInfo} />
         <Stack.Screen name="Settings" component={SettingsPage} />
         <Stack.Screen name="About" component={AboutPage} />
-        <Stack.Screen name="Terms" component={TermsPage} />
-        <Stack.Screen name="Edit Person" component={EditPage} />
+        <Stack.Screen name="Privacy Policy" component={PrivacyPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

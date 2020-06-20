@@ -10,13 +10,21 @@ import {styles} from '../styles/global';
 import moment from 'moment';
 moment().format();
 
-const LeftActions = ({progress, dragX}) => {
-  return (
-    <View style={styles.swLeft}>
-      <Text style={styles.swLeftText}>Followed up!</Text>
-    </View>
-  );
+//Actions performed on the leftward swipe of a person.
+const LeftActions = ({progress, dragX, complete}) => {
+  if (!complete) {
+    //If the person is done being contacted
+    return (
+      <View style={styles.swLeft}>
+        <Text style={styles.swLeftText}>Followed-Up!</Text>
+      </View>
+    );
+  } else {
+    return <View />;
+  }
 };
+
+//Actions performed on the rightward swipe of a person.
 const RightActions = ({progress, dragX, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -33,19 +41,21 @@ const ListPerson = ({
   onSwipeFromLeft,
   onRightPress,
   updatePerson,
+  deletePerson,
+  undoContact,
 }) => {
   const [due, setDue] = useState(false);
   const [soon, setSoon] = useState(false);
 
-  const prettyCallDate = person => {
+  const prettyContactDate = person => {
     let now = moment();
-    let nextCall = moment(person.nextCallDate);
+    let nextContact = moment(person.nextContactDate);
     let complete = person.complete;
-    let duration = moment.duration(nextCall.diff(now));
+    let duration = moment.duration(nextContact.diff(now));
     let days = Math.round(duration.asDays());
     let weeks = Math.round(duration.asWeeks());
 
-    let nextCallPretty = nextCall.format('MMM Do');
+    let nextContactPretty = nextContact.format('MMM Do');
 
     if (complete) {
       if (due) {
@@ -86,7 +96,7 @@ const ListPerson = ({
       }
       return `${weeks}w`;
     } else {
-      return `${nextCallPretty}`;
+      return `${nextContactPretty}`;
     }
   };
 
@@ -111,7 +121,13 @@ const ListPerson = ({
 
   return (
     <Swipeable
-      renderLeftActions={LeftActions}
+      renderLeftActions={(progress, dragX) => (
+        <LeftActions
+          progress={progress}
+          dragX={dragX}
+          complete={person.complete}
+        />
+      )}
       onSwipeableLeftOpen={onSwipeFromLeft}
       person={person}
       renderRightActions={(progress, dragX) => (
@@ -126,12 +142,14 @@ const ListPerson = ({
           navigation.navigate('Person Info', {
             person: person,
             updatePerson: updatePerson,
+            deletePerson: deletePerson,
+            undoContact: undoContact,
           })
         }
         style={styles.pListItem}>
         <View style={styles.pListItemView}>
           <Text style={pickCompleteStyle(person)}>{person.name}</Text>
-          <Text style={pickStyle()}>{prettyCallDate(person)}</Text>
+          <Text style={pickStyle()}>{prettyContactDate(person)}</Text>
         </View>
       </TouchableOpacity>
     </Swipeable>

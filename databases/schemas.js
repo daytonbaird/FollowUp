@@ -6,11 +6,12 @@ export const PersonSchema = {
   properties: {
     name: 'string',
     id: 'string',
-    hireDate: 'date',
-    storeNum: 'string',
+    startDate: 'date',
+    location: 'string',
     notes: 'string',
-    callsCompleted: {type: 'int', default: 0},
-    nextCallDate: {type: 'date', default: new Date()},
+    contactsCompleted: {type: 'int', default: 0},
+    nextContactDate: {type: 'date', default: new Date()},
+    previousContactDate: {type: 'date', default: new Date()},
     complete: {type: 'bool', default: false},
   },
 };
@@ -18,6 +19,6 @@ export const PersonSchema = {
 export const databaseOptions = {
   path: 'followUp.realm',
   schema: [PersonSchema],
-  schemaVersion: 0,
+  schemaVersion: 1,
   deleteRealmIfMigrationNeeded: true,
 };
