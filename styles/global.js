@@ -75,6 +75,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  personInfoListViewDark: {
+    backgroundColor: '#060606',
+  },
   personInfoHeader: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -88,8 +91,16 @@ export const styles = StyleSheet.create({
   personInfoText: {
     fontSize: 20,
   },
+  personInfoTextDark: {
+    fontSize: 20,
+    color: 'firebrick',
+  },
   personInfoDetails: {
     color: 'firebrick',
+    fontSize: 20,
+  },
+  personInfoDetailsDark: {
+    color: '#fff',
     fontSize: 20,
   },
   personEditBtn: {
@@ -243,7 +254,11 @@ export const styles = StyleSheet.create({
 
   //Scroll Views
   scrollViewBox: {
-    height: '95%',
+    height: '100%',
+  },
+  scrollViewBoxDark: {
+    height: '100%',
+    backgroundColor: '#060606',
   },
 
   apScrollViewBox: {
@@ -255,6 +270,12 @@ export const styles = StyleSheet.create({
     paddingBottom: '5%',
     paddingLeft: '10%',
     paddingRight: '10%',
+  },
+  aboutViewDark: {
+    paddingBottom: '5%',
+    paddingLeft: '10%',
+    paddingRight: '10%',
+    backgroundColor: '#060606',
   },
   aboutHeaderView: {
     padding: '5%',
@@ -275,6 +296,10 @@ export const styles = StyleSheet.create({
   },
   aboutText: {
     fontSize: 16,
+  },
+  aboutTextDark: {
+    fontSize: 16,
+    color: '#fff',
   },
   aboutLink: {
     fontSize: 16,
@@ -319,7 +344,14 @@ export const styles = StyleSheet.create({
 
   //Modals
   defaultModalView: {
-    backgroundColor: 'white',
+    backgroundColor: '#F9F9F9',
+    padding: '5%',
+    justifyContent: 'center',
+    borderRadius: 15,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  defaultModalViewDark: {
+    backgroundColor: '#131313',
     padding: '5%',
     justifyContent: 'center',
     borderRadius: 15,
@@ -339,7 +371,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   editDefaultModalView: {
-    backgroundColor: 'white',
+    backgroundColor: '#F9F9F9',
+    padding: '5%',
+    justifyContent: 'center',
+    borderRadius: 15,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  editDefaultModalViewDark: {
+    backgroundColor: '#131313',
     padding: '5%',
     justifyContent: 'center',
     borderRadius: 15,
@@ -360,6 +399,10 @@ export const styles = StyleSheet.create({
   editDateContent: {
     fontSize: 20,
   },
+  editDateContentDark: {
+    fontSize: 20,
+    color: '#fff',
+  },
   dualEditTextInput: {
     padding: '3%',
     borderWidth: 1,
@@ -370,6 +413,9 @@ export const styles = StyleSheet.create({
   },
   dualPicker: {
     width: '30%',
+  },
+  dualPickerItemStyleDark: {
+    color: '#fff',
   },
   dualModalTextInput: {
     padding: '5%',

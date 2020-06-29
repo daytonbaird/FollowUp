@@ -9,6 +9,7 @@ import {
   Text,
   TouchableOpacity,
   ActionSheetIOS,
+  Appearance,
 } from 'react-native';
 
 //Styling
@@ -23,6 +24,7 @@ const PersonInfo = ({route, navigation}) => {
   const {updatePerson} = route.params;
   const {deletePerson} = route.params;
   const {undoContact} = route.params;
+  let appearance = Appearance.getColorScheme();
 
   const [isEditVisible, setEditVisible] = useState(false);
   let isComplete = person.complete;
@@ -62,7 +64,12 @@ const PersonInfo = ({route, navigation}) => {
           title="Settings"
           color="black"
           style={styles.moreInfoBtn}>
-          <Icon name="dots-three-horizontal" size={20} color="black" />
+          {appearance === 'dark' && (
+            <Icon name="dots-three-horizontal" size={20} color="white" />
+          )}
+          {appearance === 'light' && (
+            <Icon name="dots-three-horizontal" size={20} color="black" />
+          )}
         </TouchableOpacity>
       ),
     });
@@ -95,12 +102,29 @@ const PersonInfo = ({route, navigation}) => {
     neatNextDate.getMinutes(),
   );
 
+  const getTextStyle = () => {
+    if (appearance === 'dark') {
+      return styles.personInfoTextDark;
+    } else {
+      return styles.personInfoText;
+    }
+  };
+
+  const getTextStyleDetails = () => {
+    if (appearance === 'dark') {
+      return styles.personInfoDetailsDark;
+    } else {
+      return styles.personInfoDetails;
+    }
+  };
+
   useEffect(() => {
     enableMoreInfo(); //Enables the "More Info" button on the right
   });
 
   return (
-    <ScrollView style={styles.listItemView}>
+    <ScrollView
+      style={[appearance === 'dark' ? styles.personInfoListViewDark : null]}>
       <EditPerson
         isVisible={isEditVisible}
         oldPerson={person}
@@ -114,9 +138,9 @@ const PersonInfo = ({route, navigation}) => {
 
       {/* Start Date */}
       <View style={styles.personInfoView}>
-        <Text style={styles.personInfoText}>
+        <Text style={getTextStyle()}>
           Start Date:{' '}
-          <Text style={styles.personInfoDetails}>
+          <Text style={getTextStyleDetails()}>
             {neatStartDate.toDateString()}
           </Text>{' '}
         </Text>
@@ -124,48 +148,42 @@ const PersonInfo = ({route, navigation}) => {
 
       {/* Location */}
       <View style={styles.personInfoView}>
-        <Text style={styles.personInfoText}>
-          Location:{' '}
-          <Text style={styles.personInfoDetails}>{person.location}</Text>{' '}
+        <Text style={getTextStyle()}>
+          Location: <Text style={getTextStyleDetails()}>{person.location}</Text>{' '}
         </Text>
       </View>
 
       {/* Follow-Ups Completed*/}
       <View style={styles.personInfoView}>
-        <Text style={styles.personInfoText}>
+        <Text style={getTextStyle()}>
           Contacts Completed:{' '}
-          <Text style={styles.personInfoDetails}>
-            {person.contactsCompleted}
-          </Text>{' '}
+          <Text style={getTextStyleDetails()}>{person.contactsCompleted}</Text>{' '}
         </Text>
       </View>
 
       {/* Next Contact Date*/}
       {!isComplete && (
         <View style={styles.personInfoView}>
-          <Text style={styles.personInfoText}>
+          <Text style={getTextStyle()}>
             Next Contact:{' '}
             <Text
-              style={
-                styles.personInfoDetails
-              }>{`${neatNextDate.toLocaleDateString()} @ ${neatNextDateTime}`}</Text>{' '}
+              style={getTextStyleDetails()}>{`${neatNextDate.toLocaleDateString()} @ ${neatNextDateTime}`}</Text>{' '}
           </Text>
         </View>
       )}
 
       {isComplete && (
         <View style={styles.personInfoView}>
-          <Text style={styles.personInfoText}>
-            Next Contact:{' '}
-            <Text style={styles.personInfoDetails}>{`Done!`}</Text>{' '}
+          <Text style={getTextStyle()}>
+            Next Contact: <Text style={getTextStyleDetails()}>{`Done!`}</Text>{' '}
           </Text>
         </View>
       )}
 
       {/* Notes*/}
       <View style={styles.personInfoView}>
-        <Text style={styles.personInfoText}>
-          Notes: <Text style={styles.personInfoDetails}>{person.notes}</Text>{' '}
+        <Text style={getTextStyle()}>
+          Notes: <Text style={getTextStyleDetails()}>{person.notes}</Text>{' '}
         </Text>
       </View>
     </ScrollView>

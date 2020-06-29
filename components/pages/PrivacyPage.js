@@ -1,12 +1,27 @@
 import React from 'react';
-import {ScrollView, View, Text, Linking} from 'react-native';
+import {ScrollView, View, Text, Linking, Appearance} from 'react-native';
 
 import {styles} from '../../styles/global';
 
 const PrivacyPage = () => {
+  let appearance = Appearance.getColorScheme();
+
+  const getTextStyle = () => {
+    if (appearance === 'dark') {
+      return styles.aboutTextDark;
+    } else {
+      return styles.aboutText;
+    }
+  };
   return (
-    <View style={styles.scrollViewBox}>
-      <ScrollView style={styles.aboutView}>
+    <View
+      style={[
+        appearance === 'dark' ? styles.scrollViewBoxDark : styles.scrollViewBox,
+      ]}>
+      <ScrollView
+        style={[
+          appearance === 'dark' ? styles.aboutViewDark : styles.aboutView,
+        ]}>
         <View style={styles.aboutHeaderView}>
           <Text style={styles.aboutHeader}>Privacy Policy</Text>
         </View>
@@ -15,7 +30,7 @@ const PrivacyPage = () => {
           <Text style={styles.aboutSubHeadText}>What is this?</Text>
         </View>
         <View>
-          <Text style={styles.aboutText}>
+          <Text style={getTextStyle()}>
             This serves as a mere summary outlining some of the aspects of the
             Privacy Policy agreement set forth by FollowUp and FollowUp's users
             and is in no way a substitution for the full document, accessible{' '}
@@ -35,7 +50,7 @@ const PrivacyPage = () => {
           </Text>
         </View>
         <View>
-          <Text style={styles.aboutText}>
+          <Text style={getTextStyle()}>
             You'll be happy to know that FollowUp stores all user-entered data
             locally on the device of the user, with no cloud storage of any
             kind.
@@ -47,7 +62,7 @@ const PrivacyPage = () => {
           </Text>
         </View>
         <View>
-          <Text style={styles.aboutText}>
+          <Text style={getTextStyle()}>
             We do not store any information other than what is provided by Apple
             when users download and install our app. The app connects to no
             remote servers for any purpose and is fully functional offline. The
@@ -62,7 +77,7 @@ const PrivacyPage = () => {
           </Text>
         </View>
         <View>
-          <Text style={styles.aboutText}>
+          <Text style={getTextStyle()}>
             You can visit our{' '}
             <Text
               style={styles.aboutLink}

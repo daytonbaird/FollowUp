@@ -57,9 +57,6 @@ const PersonForm = ({addPerson}) => {
         <TouchableWithoutFeedback
           onPress={Keyboard.dismiss}
           style={styles.pTouchable}>
-          {/* <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.pCreatorView}> */}
           <KeyboardAwareScrollView
             style={[
               styles.apScrollViewBox,
@@ -146,8 +143,6 @@ const PersonForm = ({addPerson}) => {
               onPress={formikProps.handleSubmit}
             />
           </KeyboardAwareScrollView>
-          {/* <View style={{height: '25%'}} /> */}
-          {/* </KeyboardAvoidingView> */}
         </TouchableWithoutFeedback>
       )}
     </Formik>

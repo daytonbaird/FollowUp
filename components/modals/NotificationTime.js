@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Button, Settings} from 'react-native';
+import {View, Text, Button, Settings, Appearance} from 'react-native';
 import Modal from 'react-native-modal';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -18,6 +18,7 @@ const NotificationTime = ({
   const [userTime, setUserTime] = useState(now);
   const [hours, setHours] = useState(userTime.getHours());
   const [minutes, setMinutes] = useState(userTime.getMinutes());
+  let appearance = Appearance.getColorScheme();
 
   const generateNotificationTime = (hrs, mins) => {
     updateSettings({notificationTimeHrs: hrs});
@@ -29,7 +30,12 @@ const NotificationTime = ({
       isVisible={isVisible}
       backdropOpacity={0.3}
       onBackdropPress={() => toggleNotifVisible()}>
-      <View style={styles.defaultModalView}>
+      <View
+        style={[
+          appearance === 'dark'
+            ? styles.defaultModalViewDark
+            : styles.defaultModalView,
+        ]}>
         <View style={styles.modalHeaderView}>
           <Text style={styles.modalHeader}>Notification Time</Text>
         </View>

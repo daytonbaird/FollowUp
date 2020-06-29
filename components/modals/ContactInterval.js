@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {View, Text, Button, TextInput, Appearance} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-community/picker';
@@ -23,6 +23,7 @@ const ContactInterval = ({
 
   let contactInterval = userSettings.contactInterval;
   let contactFreqFromSettings = userSettings.contactIntervalFreq;
+  let appearance = Appearance.getColorScheme();
 
   //Contact Frequency State
   const [contactFreq, setContactFreq] = useState({
@@ -73,7 +74,12 @@ const ContactInterval = ({
       isVisible={isVisible}
       backdropOpacity={0.3}
       onBackdropPress={() => toggleContactVisible()}>
-      <View style={styles.defaultModalView}>
+      <View
+        style={[
+          appearance === 'dark'
+            ? styles.defaultModalViewDark
+            : styles.defaultModalView,
+        ]}>
         <View style={styles.modalHeaderView}>
           <Text style={styles.modalHeader}>Contact Interval</Text>
         </View>
@@ -92,6 +98,9 @@ const ContactInterval = ({
           <Picker
             selectedValue={contactFreq.freq}
             style={styles.dualPicker}
+            itemStyle={[
+              appearance === 'dark' ? styles.dualPickerItemStyleDark : null,
+            ]}
             onValueChange={(itemValue, itemIndex) => {
               setContactFreq({freq: itemValue});
               setContactNum(contactNum);

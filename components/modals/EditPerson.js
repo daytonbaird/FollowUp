@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  Appearance,
 } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -22,6 +23,7 @@ const EditPerson = ({
   updatePerson,
 }) => {
   const oneMonthMs = 2592000000;
+  let appearance = Appearance.getColorScheme();
 
   let personCopy = JSON.parse(JSON.stringify(oldPerson));
 
@@ -41,7 +43,11 @@ const EditPerson = ({
       onBackdropPress={() => toggleEditVisible()}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.editDefaultModalView}>
+        style={[
+          appearance === 'dark'
+            ? styles.editDefaultModalViewDark
+            : styles.editDefaultModalView,
+        ]}>
         <View style={styles.modalHeaderView}>
           <Text style={styles.modalHeader}>Edit Person</Text>
         </View>
@@ -60,7 +66,14 @@ const EditPerson = ({
           <View style={styles.editDateView}>
             <View style={styles.editPersonRowView}>
               <Text style={styles.editDateHeaderText}>Start Date</Text>
-              <Text style={styles.editDateContent}>{neatStartDate}</Text>
+              <Text
+                style={[
+                  appearance === 'dark'
+                    ? styles.editDateContentDark
+                    : styles.editDateContent,
+                ]}>
+                {neatStartDate}
+              </Text>
             </View>
             <View style={styles.personSmEditView}>
               <TouchableOpacity onPress={toggleDatePicker}>

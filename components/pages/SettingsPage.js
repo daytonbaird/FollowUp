@@ -159,6 +159,14 @@ const SettingsPage = ({route}) => {
     );
   };
 
+  const getTextStyle = () => {
+    if (appearance === 'dark') {
+      return styles.settingsDisplayTextDark;
+    } else {
+      return styles.settingsDisplayText;
+    }
+  };
+
   //Resets to default settings and update the state to reflect changes.
   const resetToDefault = defaultSettings => {
     updateSettings(defaultSettings);
@@ -207,11 +215,9 @@ const SettingsPage = ({route}) => {
       {/* Contact Interval */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>Contact Interval</Text>
+          <Text style={getTextStyle()}>Contact Interval</Text>
           <Text
-            style={
-              styles.settingsDisplayText
-            }>{`${prettyContactInterval} ${prettyContactFreq}`}</Text>
+            style={getTextStyle()}>{`${prettyContactInterval} ${prettyContactFreq}`}</Text>
         </View>
         <View style={styles.settingsEditView}>
           <TouchableOpacity onPress={toggleContactVisible}>
@@ -222,10 +228,8 @@ const SettingsPage = ({route}) => {
       {/* Notification Time */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>Notification Time</Text>
-          <Text style={styles.settingsDisplayText}>
-            {prettyNotificationTime}
-          </Text>
+          <Text style={getTextStyle()}>Notification Time</Text>
+          <Text style={getTextStyle()}>{prettyNotificationTime}</Text>
         </View>
         <View style={styles.settingsEditView}>
           <TouchableOpacity onPress={toggleNotifVisible}>
@@ -236,9 +240,9 @@ const SettingsPage = ({route}) => {
       {/* Number Contacts Before Completed */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>Contacts to Complete</Text>
-          <Text style={styles.settingsDisplayText}>
-            <Text style={styles.settingsDisplayText}>
+          <Text style={getTextStyle()}>Contacts to Complete</Text>
+          <Text style={getTextStyle()}>
+            <Text style={getTextStyle()}>
               {userSettings.numContactsToComplete}
             </Text>
           </Text>
@@ -252,9 +256,7 @@ const SettingsPage = ({route}) => {
       {/* Create Push Notifications */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>
-            Create Push Notifications
-          </Text>
+          <Text style={getTextStyle()}>Create Push Notifications</Text>
           <Switch
             onValueChange={() => {
               togglePrettyCreatePushNotifs();
@@ -269,7 +271,7 @@ const SettingsPage = ({route}) => {
       {/* Show Contacted People */}
       <View style={styles.settingsView}>
         <View style={styles.settingsDisplay}>
-          <Text style={styles.settingsDisplayText}>Show Contacted People</Text>
+          <Text style={getTextStyle()}>Show Contacted People</Text>
           <Switch
             onValueChange={() => {
               togglePrettyShowContactedPeople();

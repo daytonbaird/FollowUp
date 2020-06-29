@@ -6,6 +6,7 @@ import {
   Button,
   TextInput,
   Platform,
+  Appearance,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-community/picker';
@@ -22,6 +23,7 @@ const NumContactsToComplete = ({
   const [numContactsComp, setNumContactsComp] = useState(
     '' + numContactsToComplete,
   );
+  let appearance = Appearance.getColorScheme();
 
   return (
     <Modal
@@ -30,7 +32,11 @@ const NumContactsToComplete = ({
       onBackdropPress={() => toggleNumContactVisible()}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.defaultModalView}>
+        style={[
+          appearance === 'dark'
+            ? styles.defaultModalViewDark
+            : styles.defaultModalView,
+        ]}>
         <View style={styles.modalHeaderView}>
           <Text style={styles.modalHeader}>Number of Contacts to Complete</Text>
         </View>

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {v4 as uuidv4} from 'uuid';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 const PushNotification = require('react-native-push-notification');
 
