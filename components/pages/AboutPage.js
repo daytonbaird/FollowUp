@@ -41,13 +41,14 @@ const AboutPage = () => {
         <Text style={styles.aboutSubHeadText}>Details</Text>
       </View>
       <View>
-        <Text style={styles.aboutText}>Version: [1.0 (Release)]</Text>
+        <Text style={styles.aboutText}>Version: [1.1]</Text>
         <Text style={styles.aboutText}>Created by Dayton Baird</Text>
         <Text
           style={styles.aboutLink}
           onPress={() => Linking.openURL('https://daytonbaird.com/')}>
           http://daytonbaird.com/
         </Text>
+        <Text style={styles.aboutText}>Copyright 2020 © Dayton Baird</Text>
       </View>
     </ScrollView>
   );

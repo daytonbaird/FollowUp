@@ -8,8 +8,12 @@ import {
   TouchableOpacity,
   Keyboard,
   View,
+  KeyboardAvoidingView,
+  Platform,
+  Appearance,
 } from 'react-native';
 import {Formik, ErrorMessage} from 'formik';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import * as yup from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -28,6 +32,7 @@ const personSchema = yup.object({
 
 const PersonForm = ({addPerson}) => {
   const oneMonthMs = 2592000000;
+  let appearance = Appearance.getColorScheme();
 
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
@@ -52,13 +57,23 @@ const PersonForm = ({addPerson}) => {
         <TouchableWithoutFeedback
           onPress={Keyboard.dismiss}
           style={styles.pTouchable}>
-          <ScrollView style={styles.pCreatorView}>
+          {/* <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.pCreatorView}> */}
+          <KeyboardAwareScrollView
+            style={[
+              styles.apScrollViewBox,
+              appearance === 'dark'
+                ? styles.pCreatorViewDark
+                : styles.pCreatorView,
+            ]}>
             <View style={styles.pCreatorHeaderView}>
               <Text style={styles.pCreatorHeader}>Add a Person</Text>
             </View>
             <TextInput
               style={styles.pCreatorInput}
               placeholder="Name*"
+              autoCapitalize="words"
               onChangeText={formikProps.handleChange('name')}
               value={formikProps.values.name}
             />
@@ -67,8 +82,20 @@ const PersonForm = ({addPerson}) => {
             </Text>
 
             <View style={styles.pCreatorDateInput}>
-              <Text style={styles.pCreatorDateText}>Start Date</Text>
-              <Text style={styles.pCreatorDateContent}>
+              <Text
+                style={[
+                  appearance === 'dark'
+                    ? styles.pCreatorDateTextDark
+                    : styles.pCreatorDateText,
+                ]}>
+                Start Date
+              </Text>
+              <Text
+                style={[
+                  appearance === 'dark'
+                    ? styles.pCreatorDateContentDark
+                    : styles.pCreatorDateContent,
+                ]}>
                 {date.toLocaleDateString()}
               </Text>
             </View>
@@ -95,6 +122,7 @@ const PersonForm = ({addPerson}) => {
             <TextInput
               style={styles.pCreatorInput}
               placeholder="Location"
+              autoCapitalize="words"
               onChangeText={formikProps.handleChange('location')}
               value={formikProps.values.location}
             />
@@ -117,7 +145,9 @@ const PersonForm = ({addPerson}) => {
               color="firebrick" /* Will soon turn this into TouchableOpacity Btn */
               onPress={formikProps.handleSubmit}
             />
-          </ScrollView>
+          </KeyboardAwareScrollView>
+          {/* <View style={{height: '25%'}} /> */}
+          {/* </KeyboardAvoidingView> */}
         </TouchableWithoutFeedback>
       )}
     </Formik>

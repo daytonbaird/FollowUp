@@ -5,17 +5,21 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   //Add Person Form
   pCreatorView: {
-    padding: '3.5%',
+    padding: '7%',
+  },
+  pCreatorViewDark: {
+    padding: '7%',
+    backgroundColor: '#060606',
   },
   pCreatorInput: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#ddd',
     padding: '3.8%',
     fontSize: 20,
     borderRadius: 6,
   },
   pCreatorDateInput: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#ddd',
     borderRadius: 6,
     padding: '3.8%',
@@ -27,8 +31,16 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: 'darkgray',
   },
+  pCreatorDateTextDark: {
+    fontSize: 20,
+    color: '#5f5f62',
+  },
   pCreatorDateContent: {
     fontSize: 20,
+  },
+  pCreatorDateContentDark: {
+    fontSize: 20,
+    color: '#fff',
   },
   pCreatorDateBtnSm: {
     color: 'firebrick',
@@ -104,7 +116,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginBottom: '10%', //offset from bottom
     borderRadius: 50, //rounding for button
-    width: 300,
+    width: '65%',
   },
   apText: {
     color: '#fff',
@@ -147,14 +159,30 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
+  pListItemDark: {
+    padding: '3.5%',
+    backgroundColor: '#060606',
+    borderBottomWidth: 1,
+    borderBottomColor: '#111111',
+  },
   pListText: {
     fontSize: 20,
     flexDirection: 'row',
+  },
+  pListTextDark: {
+    fontSize: 20,
+    flexDirection: 'row',
+    color: '#fff',
   },
   pListTextComplete: {
     fontSize: 20,
     flexDirection: 'row',
     color: 'gray',
+  },
+  pListTextCompleteDark: {
+    fontSize: 20,
+    flexDirection: 'row',
+    color: '#7F7F7F',
   },
   pListDate: {
     fontSize: 20,
@@ -176,6 +204,10 @@ export const styles = StyleSheet.create({
   //App View
   appViewContainer: {
     flex: 1,
+  },
+  appViewContainerDark: {
+    flex: 1,
+    backgroundColor: '#060606',
   },
 
   //Swipeable
@@ -209,9 +241,15 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
   },
 
+  //Scroll Views
   scrollViewBox: {
     height: '95%',
   },
+
+  apScrollViewBox: {
+    height: '90%',
+  },
+
   //About Page
   aboutView: {
     paddingBottom: '5%',
@@ -249,6 +287,9 @@ export const styles = StyleSheet.create({
     paddingLeft: '10%',
     paddingRight: '10%',
   },
+  settingsScrollViewDark: {
+    backgroundColor: '#060606',
+  },
   settingsDisplay: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -270,6 +311,10 @@ export const styles = StyleSheet.create({
   },
   settingsDisplayText: {
     fontSize: 20,
+  },
+  settingsDisplayTextDark: {
+    fontSize: 20,
+    color: '#fff',
   },
 
   //Modals

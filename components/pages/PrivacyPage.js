@@ -21,7 +21,9 @@ const PrivacyPage = () => {
             and is in no way a substitution for the full document, accessible{' '}
             <Text
               style={styles.aboutLink}
-              onPress={() => Linking.openURL('https://daytonbaird.com/')}>
+              onPress={() =>
+                Linking.openURL('https://followupapp.io/privacypolicy.html')
+              }>
               here
             </Text>
             . By using this app you agree to these terms.
@@ -61,19 +63,14 @@ const PrivacyPage = () => {
         </View>
         <View>
           <Text style={styles.aboutText}>
-            FollowUp was created by Dayton Baird.
-          </Text>
-          <Text style={styles.aboutText}>
-            You may contact him{' '}
+            You can visit our{' '}
             <Text
               style={styles.aboutLink}
-              onPress={() =>
-                Linking.openURL('https://daytonbaird.com/contact')
-              }>
-              here
-            </Text>
-            , or via e-mail at support@daytonbaird.com if you have any
-            questions.
+              onPress={() => Linking.openURL('https://followupapp.io/')}>
+              website
+            </Text>{' '}
+            directly, or send an e-mail to support@followupapp.io if you have
+            any questions.
           </Text>
         </View>
       </ScrollView>

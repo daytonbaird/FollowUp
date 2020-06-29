@@ -1,5 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button, TouchableOpacity, TextInput} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  TextInput,
+  Platform,
+} from 'react-native';
 import Modal from 'react-native-modal';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -31,7 +39,9 @@ const EditPerson = ({
       isVisible={isVisible}
       backdropOpacity={0.3}
       onBackdropPress={() => toggleEditVisible()}>
-      <View style={styles.editDefaultModalView}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.editDefaultModalView}>
         <View style={styles.modalHeaderView}>
           <Text style={styles.modalHeader}>Edit Person</Text>
         </View>
@@ -103,7 +113,7 @@ const EditPerson = ({
             toggleEditVisible();
           }}
         />
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

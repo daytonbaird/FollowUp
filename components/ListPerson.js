@@ -1,6 +1,6 @@
 //Libraries
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Appearance} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 //Styling
@@ -46,6 +46,7 @@ const ListPerson = ({
 }) => {
   const [due, setDue] = useState(false);
   const [soon, setSoon] = useState(false);
+  let appearance = Appearance.getColorScheme();
 
   const prettyContactDate = person => {
     let now = moment();
@@ -101,10 +102,18 @@ const ListPerson = ({
   };
 
   const pickCompleteStyle = person => {
-    if (person.complete) {
-      return styles.pListTextComplete;
+    if (appearance === 'dark') {
+      if (person.complete) {
+        return styles.pListTextCompleteDark;
+      } else {
+        return styles.pListTextDark;
+      }
     } else {
-      return styles.pListText;
+      if (person.complete) {
+        return styles.pListTextComplete;
+      } else {
+        return styles.pListText;
+      }
     }
   };
 
@@ -146,7 +155,9 @@ const ListPerson = ({
             undoContact: undoContact,
           })
         }
-        style={styles.pListItem}>
+        style={[
+          appearance === 'dark' ? styles.pListItemDark : styles.pListItem,
+        ]}>
         <View style={styles.pListItemView}>
           <Text style={pickCompleteStyle(person)}>{person.name}</Text>
           <Text style={pickStyle()}>{prettyContactDate(person)}</Text>

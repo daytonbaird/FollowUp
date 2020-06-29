@@ -8,9 +8,11 @@ import {
   ActionSheetIOS,
   Settings,
   Alert,
+  Appearance,
+  StatusBar,
 } from 'react-native';
 import {v4 as uuidv4} from 'uuid';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 const PushNotification = require('react-native-push-notification');
@@ -71,15 +73,24 @@ const HomeScreen = ({navigation}) => {
   const [dataPulled, setDataPulled] = useState(false);
   var userSettings = getUserSettings();
   var longAssTime = 31504464000000;
+  var appearance = Appearance.getColorScheme();
 
   const updateUserSettings = () => {
     userSettings = getUserSettings();
+  };
+
+  const checkAppearance = () => {
+    appearance = Appearance.getColorScheme();
   };
 
   const checkIfFirstLaunch = () => {
     if (Settings.get('firstLaunch') === undefined) {
       Settings.set({firstLaunch: true});
       Settings.set(defaultSettings);
+      Alert.alert(
+        'Welome',
+        'Welcome to Follow Up! To start, add a person with the button below. If you like our app, please be sure to rate us on the App Store! Thank you for downloading.',
+      );
     }
   };
 
@@ -175,6 +186,7 @@ const HomeScreen = ({navigation}) => {
   //Handler for contacts.
   const assignContacts = person => {
     let now = new Date();
+    updateUserSettings();
     if (person.contactsCompleted < userSettings.numContactsToComplete) {
       cancelContactNotification(person.id); //Cancels old contact notification
       assignNextContact(person, userSettings.contactInterval);
@@ -236,6 +248,7 @@ const HomeScreen = ({navigation}) => {
 
   //Add person to state & db
   const addPerson = person => {
+    updateUserSettings();
     assignPersonInfo(person);
     realm.write(() => {
       realm.create('Person', {
@@ -382,7 +395,12 @@ const HomeScreen = ({navigation}) => {
           title="Settings"
           color="black"
           style={styles.moreInfoBtn}>
-          <Icon name="dots-three-horizontal" size={20} color="black" />
+          {appearance === 'dark' && (
+            <Icon name="dots-three-horizontal" size={20} color="white" />
+          )}
+          {appearance === 'light' && (
+            <Icon name="dots-three-horizontal" size={20} color="black" />
+          )}
         </TouchableOpacity>
       ),
     });
@@ -391,6 +409,7 @@ const HomeScreen = ({navigation}) => {
   //Contacted once upon page load
   useEffect(() => {
     checkIfFirstLaunch();
+    checkAppearance();
     updateUserSettings();
     enableMoreInfo(); //Enables the "More Info" button on the right
     updateStateFromDB(); //Pull database and add to state
@@ -399,7 +418,14 @@ const HomeScreen = ({navigation}) => {
   });
 
   return (
-    <View style={styles.appViewContainer}>
+    <View
+      style={[
+        appearance === 'dark'
+          ? styles.appViewContainerDark
+          : styles.appViewContainer,
+      ]}>
+      {appearance === 'dark' && <StatusBar barStyle="light-content" />}
+      {appearance === 'light' && <StatusBar barStyle="dark-content" />}
       <Header />
       <FlatList
         data={persons}
@@ -460,9 +486,21 @@ const Stack = createStackNavigator();
 
 //Navigation here [pages/panes]
 const App = () => {
+  let appAppearance = Appearance.getColorScheme();
+
+  let darkAppearance = {
+    headerStyle: {
+      backgroundColor: '#060606',
+    },
+    headerTitleStyle: {
+      color: 'white',
+    },
+  };
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={appAppearance === 'dark' ? darkAppearance : null}>
         <Stack.Screen name="Follow Up" component={HomeScreen} />
         <Stack.Screen name="Add a Person" component={PersonCreator} />
         <Stack.Screen name="Person Info" component={PersonInfo} />

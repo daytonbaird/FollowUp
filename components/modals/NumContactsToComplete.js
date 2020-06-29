@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {
+  View,
+  KeyboardAvoidingView,
+  Text,
+  Button,
+  TextInput,
+  Platform,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-community/picker';
 
@@ -21,7 +28,9 @@ const NumContactsToComplete = ({
       isVisible={isVisible}
       backdropOpacity={0.3}
       onBackdropPress={() => toggleNumContactVisible()}>
-      <View style={styles.defaultModalView}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.defaultModalView}>
         <View style={styles.modalHeaderView}>
           <Text style={styles.modalHeader}>Number of Contacts to Complete</Text>
         </View>
@@ -46,7 +55,7 @@ const NumContactsToComplete = ({
             toggleNumContactVisible();
           }}
         />
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

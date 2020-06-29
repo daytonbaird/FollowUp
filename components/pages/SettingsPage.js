@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Settings,
   Alert,
+  Appearance,
 } from 'react-native';
 
 //Components
@@ -35,6 +36,7 @@ const SettingsPage = ({route}) => {
   const {getUserSettings} = route.params;
   const {updateUserSettings} = route.params;
   const {defaultSettings} = route.params;
+  let appearance = Appearance.getColorScheme();
 
   //Page-Level State Declarations
   //The Settings
@@ -176,7 +178,8 @@ const SettingsPage = ({route}) => {
   });
 
   return (
-    <ScrollView>
+    <ScrollView
+      style={[appearance === 'dark' ? styles.settingsScrollViewDark : null]}>
       <ContactInterval
         isVisible={isContactVisible}
         toggleContactVisible={toggleContactVisible}
@@ -288,14 +291,14 @@ const SettingsPage = ({route}) => {
             '',
             [
               {
+                text: 'No',
+              },
+              {
                 text: 'Yes',
+                style: 'destructive',
                 onPress: () => {
                   resetToDefault(defaultSettings);
                 },
-              },
-              {
-                text: 'No',
-                style: 'cancel',
               },
             ],
           );

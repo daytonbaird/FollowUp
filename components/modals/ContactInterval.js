@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, Button, TextInput} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-community/picker';
 
@@ -40,7 +41,7 @@ const ContactInterval = ({
   };
 
   //Generates the appropriate contact interval based on user selection
-  const gernerateContactInterval = (num, freq) => {
+  const generateContactInterval = (num, freq) => {
     if (!num) {
       num = 0;
     }
