@@ -12,7 +12,9 @@ import {styles} from '../../styles/global';
 //Modules
 const PersonCreator = ({route}) => {
   const {addPerson} = route.params;
-  return <PersonForm addPerson={addPerson} />;
+  const {getUserSettings} = route.params;
+
+  return <PersonForm addPerson={addPerson} getUserSettings={getUserSettings} />;
 };
 
 export default PersonCreator;

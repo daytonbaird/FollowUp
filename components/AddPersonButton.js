@@ -6,13 +6,19 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {styles} from '../styles/global';
 
 //AddItem Component
-const AddPersonButton = ({navigation, screenName, addPerson}) => {
+const AddPersonButton = ({
+  navigation,
+  screenName,
+  addPerson,
+  getUserSettings,
+}) => {
   return (
     <View style={styles.apView}>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate(screenName, {
             addPerson: addPerson,
+            getUserSettings: getUserSettings,
           })
         }
         style={styles.apBtn}>

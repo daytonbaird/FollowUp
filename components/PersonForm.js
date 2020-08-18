@@ -16,9 +16,12 @@ import {Formik, ErrorMessage} from 'formik';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import * as yup from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import CheckBox from '@react-native-community/checkbox';
+import * as Animatable from 'react-native-animatable';
 
 //Styling
 import {styles} from '../styles/global';
+import AlreadyContacted from './AlreadyContacted';
 
 const personSchema = yup.object({
   name: yup
@@ -30,12 +33,14 @@ const personSchema = yup.object({
   notes: yup.string(),
 });
 
-const PersonForm = ({addPerson}) => {
+const PersonForm = ({addPerson, getUserSettings}) => {
   const oneMonthMs = 2592000000;
   let appearance = Appearance.getColorScheme();
 
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [showAlreadyContacted, setShowAlreadyContacted] = useState(false);
 
   const showDatePicker = () => {
     if (!show) {
@@ -45,9 +50,23 @@ const PersonForm = ({addPerson}) => {
     }
   };
 
+  const toggleAlreadyContacted = () => {
+    toggleCheckBox ? setToggleCheckBox(false) : setToggleCheckBox(true);
+
+    setTimeout(() => {
+      setShowAlreadyContacted(previousState => !previousState);
+    }, 300);
+  };
+
   return (
     <Formik
-      initialValues={{name: '', location: '', startDate: date, notes: ''}}
+      initialValues={{
+        name: '',
+        location: '',
+        startDate: date,
+        contactsCompleted: 0,
+        notes: '',
+      }}
       validationSchema={personSchema}
       onSubmit={(values, actions) => {
         actions.resetForm();
@@ -136,6 +155,35 @@ const PersonForm = ({addPerson}) => {
             <Text style={styles.pErrorText}>
               {formikProps.touched.notes && formikProps.errors.notes}
             </Text>
+
+            <View style={styles.pCreatorAlreadyContacted}>
+              <CheckBox
+                disabled={false}
+                value={toggleCheckBox}
+                animationDuration={0.3}
+                onCheckColor={'firebrick'}
+                onTintColor={'firebrick'}
+                onValueChange={() => {
+                  toggleAlreadyContacted();
+                }}
+              />
+
+              <Text
+                style={[
+                  appearance === 'dark'
+                    ? styles.pCreatorContactedTextDark
+                    : styles.pCreatorContactedText,
+                ]}>
+                Already Contacted?
+              </Text>
+            </View>
+
+            {showAlreadyContacted && (
+              <AlreadyContacted
+                getUserSettings={getUserSettings}
+                formikProps={formikProps}
+              />
+            )}
 
             <Button
               title="Submit"

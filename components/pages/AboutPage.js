@@ -59,7 +59,7 @@ const AboutPage = () => {
         <Text style={styles.aboutSubHeadText}>Details</Text>
       </View>
       <View>
-        <Text style={getTextStyle()}>Version: [1.1]</Text>
+        <Text style={getTextStyle()}>Version: [1.0.1]</Text>
         <Text style={getTextStyle()}>
           Currently Displaying: {prettyDisplayType()}{' '}
         </Text>

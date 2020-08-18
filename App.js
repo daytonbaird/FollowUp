@@ -241,7 +241,7 @@ const HomeScreen = ({navigation}) => {
   //Assign metadata to person
   const assignPersonInfo = person => {
     person.id = uuidv4();
-    person.contactsCompleted = 0;
+    // person.contactsCompleted = 0;
     person.complete = false;
     assignFirstContact(person, userSettings.contactInterval);
   };
@@ -476,6 +476,7 @@ const HomeScreen = ({navigation}) => {
         screenName={'Add a Person'}
         navigation={navigation}
         addPerson={addPerson}
+        getUserSettings={getUserSettings}
       />
     </View>
   );

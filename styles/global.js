@@ -27,6 +27,27 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  pCreatorAlreadyContacted: {
+    paddingBottom: '2%',
+    fontSize: 20,
+    flexDirection: 'row',
+    // justifyContent: 'space-around',
+  },
+  pCreatorContactedText: {
+    paddingTop: '2%',
+    paddingBottom: '2%',
+    paddingLeft: '2%',
+    fontSize: 20,
+    bottom: '0.5%',
+  },
+  pCreatorContactedTextDark: {
+    paddingTop: '2%',
+    paddingBottom: '2%',
+    paddingLeft: '2%',
+    fontSize: 20,
+    bottom: '0.5%',
+    color: '#fff',
+  },
   pCreatorDateText: {
     fontSize: 20,
     color: 'darkgray',
@@ -64,6 +85,27 @@ export const styles = StyleSheet.create({
   },
   pCreatorHeaderView: {
     alignItems: 'center',
+  },
+
+  alreadyContactedView: {
+    paddingBottom: '5%',
+    paddingLeft: '10%',
+    paddingRight: '10%',
+  },
+  alreadyContactedDisplay: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  alreadyContactedStepper: {
+    padding: '2%',
+    alignItems: 'flex-end',
+  },
+  alreadyContactedDisplayText: {
+    fontSize: 20,
+  },
+  alreadyContactedDisplayTextDark: {
+    fontSize: 20,
+    color: '#fff',
   },
 
   //Person Data
@@ -395,6 +437,13 @@ export const styles = StyleSheet.create({
   editDateHeaderText: {
     fontSize: 20,
     color: 'firebrick',
+  },
+  editDateHeaderTextNoColor: {
+    fontSize: 20,
+  },
+  editDateHeaderTextNoColorDark: {
+    fontSize: 20,
+    color: '#fff',
   },
   editDateContent: {
     fontSize: 20,
