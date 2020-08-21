@@ -190,6 +190,7 @@ const PersonForm = ({addPerson, getUserSettings}) => {
               color="firebrick" /* Will soon turn this into TouchableOpacity Btn */
               onPress={formikProps.handleSubmit}
             />
+            <View style={styles.pCreatorBottomPadding} />
           </KeyboardAwareScrollView>
         </TouchableWithoutFeedback>
       )}

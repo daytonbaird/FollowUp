@@ -13,6 +13,7 @@ import {
 import Modal from 'react-native-modal';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Stepper from 'react-native-ios-stepper';
 
 //styles
 import {styles} from '../../styles/global';
@@ -41,6 +42,8 @@ const EditPerson = ({
     setShowDatePicker(previousState => !previousState);
   };
 
+  let [stepValue, setStepValue] = useState(person.contactsCompleted);
+
   const compareAndUpdateDate = (oldP, newP) => {
     if (oldP.startDate === newP.startDate) {
       return;
@@ -61,6 +64,14 @@ const EditPerson = ({
           new Date(newP.nextContactDate).getMinutes(),
         );
       }
+    }
+  };
+
+  const getTextStyle = () => {
+    if (appearance === 'dark') {
+      return styles.editTextValueDark;
+    } else {
+      return styles.editTextValue;
     }
   };
 
@@ -90,6 +101,25 @@ const EditPerson = ({
             onChangeText={name => setPerson({...person, name: name})}
             value={person.name}
           />
+
+          <View style={styles.editContactedDisplay}>
+            <Text style={styles.editText}>Number Times Contacted: </Text>
+            <Text style={getTextStyle()}>
+              <Text style={getTextStyle()}>{stepValue}</Text>
+            </Text>
+          </View>
+          <View style={styles.editContactedStepper}>
+            <Stepper
+              maxValue={Settings.get('numContactsToComplete')}
+              minValue={0}
+              value={stepValue}
+              color={'firebrick'}
+              onPress={index => {
+                setStepValue(index);
+                setPerson({...person, contactsCompleted: index});
+              }}
+            />
+          </View>
 
           <View style={styles.editDateView}>
             <View style={styles.editPersonRowView}>

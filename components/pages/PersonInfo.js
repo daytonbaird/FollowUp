@@ -106,9 +106,15 @@ const PersonInfo = ({route, navigation}) => {
     let prettyTimeMins = notifTimeMins;
     let amPm = 'AM';
 
-    if (notifTimeHrs > 12) {
+    if (notifTimeHrs === 0) {
+      prettyTimeHrs = 12;
+    }
+
+    if (notifTimeHrs >= 12) {
       amPm = 'PM';
-      prettyTimeHrs = notifTimeHrs - 12;
+      if (notifTimeHrs > 12) {
+        prettyTimeHrs = notifTimeHrs - 12;
+      }
     }
 
     if (notifTimeMins < 10) {
@@ -198,7 +204,7 @@ const PersonInfo = ({route, navigation}) => {
           <Text style={getTextStyle()}>
             Next Contact:{' '}
             <Text
-              style={getTextStyleDetails()}>{`${neatNextDate.toLocaleDateString()} @ ${neatNextDateTime}`}</Text>{' '}
+              style={getTextStyleDetails()}>{`${neatNextDate.toLocaleDateString()} @ ${neatNextDateTime}`}</Text>
           </Text>
         </View>
       )}

@@ -1,11 +1,26 @@
-import React from 'react';
-import {ScrollView, Text, View, Linking, Appearance} from 'react-native';
+import React, {useState} from 'react';
+import {
+  ScrollView,
+  Text,
+  View,
+  Linking,
+  Appearance,
+  Settings,
+} from 'react-native';
 
 //Styling
 import {styles} from '../../styles/global';
 
+import WhatsNewModal from '../modals/WhatsNewModal';
+
 const AboutPage = () => {
   let appearance = Appearance.getColorScheme();
+  let version = Settings.get('version');
+
+  const [isWhatsNewModalVisible, setIsWhatsNewModalVisible] = useState(false);
+  const toggleWhatsNewModalVisible = () => {
+    setIsWhatsNewModalVisible(previousState => !previousState);
+  };
 
   const getTextStyle = () => {
     if (appearance === 'dark') {
@@ -28,6 +43,10 @@ const AboutPage = () => {
       <View style={styles.aboutHeaderView}>
         <Text style={styles.aboutHeader}>About This App</Text>
       </View>
+      <WhatsNewModal
+        isVisible={isWhatsNewModalVisible}
+        toggleWhatsNewModalVisible={toggleWhatsNewModalVisible}
+      />
 
       <View style={styles.aboutSubHead}>
         <Text style={styles.aboutSubHeadText}>What does it do?</Text>
@@ -59,7 +78,12 @@ const AboutPage = () => {
         <Text style={styles.aboutSubHeadText}>Details</Text>
       </View>
       <View>
-        <Text style={getTextStyle()}>Version: [1.0.1]</Text>
+        <Text style={getTextStyle()}>
+          Version: {version}{' '}
+          <Text style={styles.aboutLink} onPress={toggleWhatsNewModalVisible}>
+            (What's New?)
+          </Text>
+        </Text>
         <Text style={getTextStyle()}>
           Currently Displaying: {prettyDisplayType()}{' '}
         </Text>

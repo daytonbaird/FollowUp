@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-community/picker';
+import Stepper from 'react-native-ios-stepper';
 
 //styles
 import {styles} from '../../styles/global';
@@ -20,10 +21,10 @@ const NumContactsToComplete = ({
   numContactsToComplete,
   updateSettings,
 }) => {
-  const [numContactsComp, setNumContactsComp] = useState(
-    '' + numContactsToComplete,
-  );
+  const [numContactsComp, setNumContactsComp] = useState(numContactsToComplete);
   let appearance = Appearance.getColorScheme();
+
+  let [stepValue, setStepValue] = useState(1);
 
   return (
     <Modal
@@ -41,13 +42,15 @@ const NumContactsToComplete = ({
           <Text style={styles.modalHeader}>Number of Contacts to Complete</Text>
         </View>
         <View style={styles.numContactsModalView}>
-          <TextInput
-            placeholder="1"
-            keyboardType="number-pad"
-            contextMenuHidden={true}
-            style={styles.dualModalTextInput}
-            onChangeText={num => setNumContactsComp('' + num)}
+          <Text style={styles.dualModalTextInput}>{numContactsComp}</Text>
+          <Stepper
+            maxValue={100}
+            minValue={1}
             value={numContactsComp}
+            color={'firebrick'}
+            onPress={index => {
+              setNumContactsComp(index);
+            }}
           />
         </View>
         <Button

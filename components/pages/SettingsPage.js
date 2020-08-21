@@ -117,9 +117,15 @@ const SettingsPage = ({route}) => {
     let prettyTimeMins = notifTimeMins;
     let amPm = 'AM';
 
-    if (notifTimeHrs > 12) {
+    if (notifTimeHrs === 0) {
+      prettyTimeHrs = 12;
+    }
+
+    if (notifTimeHrs >= 12) {
       amPm = 'PM';
-      prettyTimeHrs = notifTimeHrs - 12;
+      if (notifTimeHrs > 12) {
+        prettyTimeHrs = notifTimeHrs - 12;
+      }
     }
 
     if (notifTimeMins < 10) {

@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     padding: '7%',
     backgroundColor: '#060606',
   },
+  pCreatorBottomPadding: {
+    padding: '25%',
+  },
   pCreatorInput: {
     borderWidth: 2,
     borderColor: '#ddd',
@@ -127,7 +130,7 @@ export const styles = StyleSheet.create({
   },
   personInfoView: {
     paddingBottom: '5%',
-    paddingLeft: '10%',
+    paddingLeft: '9%',
     paddingRight: '10%',
   },
   personInfoText: {
@@ -179,6 +182,7 @@ export const styles = StyleSheet.create({
   },
   apView: {
     alignItems: 'center', //center button
+    // position: 'absolute',
   },
   apList: {
     flex: 1,
@@ -431,6 +435,23 @@ export const styles = StyleSheet.create({
     color: 'firebrick',
     paddingTop: '2%',
   },
+  editTextValue: {
+    fontSize: 20,
+    paddingTop: '2%',
+  },
+  editTextValueDark: {
+    fontSize: 20,
+    color: '#fff',
+    paddingTop: '2%',
+  },
+  editContactedDisplay: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  editContactedStepper: {
+    padding: '2%',
+    alignItems: 'flex-end',
+  },
   editDateView: {
     paddingTop: '2%',
   },
@@ -500,5 +521,25 @@ export const styles = StyleSheet.create({
   modalHeader: {
     fontSize: 20,
     color: 'firebrick',
+  },
+  modalSubHeader: {
+    color: 'firebrick',
+  },
+  whatsNewModalView: {
+    padding: '1%',
+  },
+  whatsNewHeader: {
+    padding: '2%',
+    fontSize: 20,
+    color: 'firebrick',
+  },
+  whatsNewText: {
+    paddingLeft: '2%',
+    fontSize: 16,
+  },
+  whatsNewTextDark: {
+    paddingLeft: '2%',
+    fontSize: 16,
+    color: '#fff',
   },
 });

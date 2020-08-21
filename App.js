@@ -12,8 +12,8 @@ import {
   StatusBar,
 } from 'react-native';
 import {v4 as uuidv4} from 'uuid';
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
-import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 const PushNotification = require('react-native-push-notification');
 
@@ -38,6 +38,9 @@ import {styles} from './styles/global';
 import Icon from 'react-native-vector-icons/Entypo';
 
 import {YellowBox} from 'react-native';
+
+//Modals
+import WhatsNewModal from './components/modals/WhatsNewModal';
 
 YellowBox.ignoreWarnings([
   'Non-serializable values were found in the navigation state',
@@ -75,6 +78,11 @@ const HomeScreen = ({navigation}) => {
   var longAssTime = 31504464000000;
   var appearance = Appearance.getColorScheme();
 
+  const [isWhatsNewModalVisible, setIsWhatsNewModalVisible] = useState(false);
+  const toggleWhatsNewModalVisible = () => {
+    setIsWhatsNewModalVisible(previousState => !previousState);
+  };
+
   const updateUserSettings = () => {
     userSettings = getUserSettings();
   };
@@ -93,6 +101,19 @@ const HomeScreen = ({navigation}) => {
       );
     }
   };
+
+  const checkVersionNumber = () => {
+    let currentVersion = '1.1.0';
+    if (Settings.get('version') === undefined) {
+      toggleWhatsNewModalVisible();
+      Settings.set({version: currentVersion});
+    } else if (Settings.get('version') !== currentVersion) {
+      toggleWhatsNewModalVisible();
+      Settings.set({version: currentVersion});
+    }
+  };
+
+  console.log(Settings.get('version'));
 
   //Add person to state
   const addPersonToState = person => {
@@ -413,6 +434,7 @@ const HomeScreen = ({navigation}) => {
   //Contacted once upon page load
   useEffect(() => {
     checkIfFirstLaunch();
+    checkVersionNumber();
     checkAppearance();
     updateUserSettings();
     enableMoreInfo(); //Enables the "More Info" button on the right
@@ -431,6 +453,10 @@ const HomeScreen = ({navigation}) => {
       {appearance === 'dark' && <StatusBar barStyle="light-content" />}
       {appearance === 'light' && <StatusBar barStyle="dark-content" />}
       <Header />
+      <WhatsNewModal
+        isVisible={isWhatsNewModalVisible}
+        toggleWhatsNewModalVisible={toggleWhatsNewModalVisible}
+      />
       <FlatList
         data={persons}
         renderItem={({item}) => {
