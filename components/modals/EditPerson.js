@@ -23,8 +23,11 @@ const EditPerson = ({
   toggleEditVisible,
   oldPerson,
   updatePerson,
+  updatePushNotification,
 }) => {
   const oneMonthMs = 2592000000;
+  const intervalInMs = Settings.get('contactInterval');
+  console.log(intervalInMs);
   let appearance = Appearance.getColorScheme();
 
   let personCopy = JSON.parse(JSON.stringify(oldPerson));
@@ -36,6 +39,29 @@ const EditPerson = ({
 
   const toggleDatePicker = () => {
     setShowDatePicker(previousState => !previousState);
+  };
+
+  const compareAndUpdateDate = (oldP, newP) => {
+    if (oldP.startDate === newP.startDate) {
+      return;
+    } else {
+      if (person.contactsCompleted === 0) {
+        let nextContactDateWithTime = new Date(
+          newP.startDate.getTime() + Settings.get('contactInterval'),
+        );
+        newP.nextContactDate = nextContactDateWithTime.setHours(
+          Settings.get('notificationTimeHrs'),
+          Settings.get('notificationTimeMins'),
+          0,
+        );
+        newP.nextContactDate = nextContactDateWithTime;
+        updatePushNotification(
+          newP,
+          new Date(newP.nextContactDate).getHours(),
+          new Date(newP.nextContactDate).getMinutes(),
+        );
+      }
+    }
   };
 
   return (
@@ -124,6 +150,7 @@ const EditPerson = ({
           title="Save"
           color="firebrick"
           onPress={() => {
+            compareAndUpdateDate(personCopy, person);
             updatePerson(person);
             toggleEditVisible();
           }}

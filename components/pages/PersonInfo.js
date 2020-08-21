@@ -152,6 +152,7 @@ const PersonInfo = ({route, navigation}) => {
         oldPerson={person}
         toggleEditVisible={toggleEditVisible}
         updatePerson={updatePerson}
+        updatePushNotification={updatePushNotification}
       />
       <ManuallySchedule
         isVisible={isManuallyScheduleVisible}
