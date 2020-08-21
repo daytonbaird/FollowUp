@@ -484,6 +484,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  scheduleModalView: {
+    // alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    paddingTop: '2%',
+  },
+  scheduleRowView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   modalHeaderView: {
     alignItems: 'center',
   },

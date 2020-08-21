@@ -241,7 +241,6 @@ const HomeScreen = ({navigation}) => {
   //Assign metadata to person
   const assignPersonInfo = person => {
     person.id = uuidv4();
-    // person.contactsCompleted = 0;
     person.complete = false;
     assignFirstContact(person, userSettings.contactInterval);
   };
@@ -361,6 +360,11 @@ const HomeScreen = ({navigation}) => {
     PushNotification.cancelLocalNotifications({id: personId});
   };
 
+  const updatePushNotification = (person, hours, mins) => {
+    cancelContactNotification(person.id);
+    scheduleContactNotification(person, hours, mins);
+  };
+
   const cancelAllNotifications = () => {
     PushNotification.cancelAllLocalNotifications();
   };
@@ -439,6 +443,7 @@ const HomeScreen = ({navigation}) => {
                   deletePerson={deletePerson}
                   undoContact={undoContact}
                   navigation={navigation}
+                  updatePushNotification={updatePushNotification}
                   onSwipeFromLeft={() => updateContactNum(item)}
                   onRightPress={() => deletePerson(item.id)}
                 />
@@ -450,6 +455,7 @@ const HomeScreen = ({navigation}) => {
                   deletePerson={deletePerson}
                   updatePerson={updatePerson}
                   undoContact={undoContact}
+                  updatePushNotification={updatePushNotification}
                   navigation={navigation}
                   onRightPress={() => deletePerson(item.id)}
                 />
@@ -464,6 +470,7 @@ const HomeScreen = ({navigation}) => {
                   updatePerson={updatePerson}
                   deletePerson={deletePerson}
                   undoContact={undoContact}
+                  updatePushNotification={updatePushNotification}
                   onSwipeFromLeft={() => updateContactNum(item)}
                   onRightPress={() => deletePerson(item.id)}
                 />

@@ -8,6 +8,7 @@ import {
   TextInput,
   Platform,
   Appearance,
+  Settings,
 } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -15,6 +16,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 //styles
 import {styles} from '../../styles/global';
+import ContactInterval from './ContactInterval';
 
 const EditPerson = ({
   isVisible,

@@ -43,6 +43,7 @@ const ListPerson = ({
   updatePerson,
   deletePerson,
   undoContact,
+  updatePushNotification,
 }) => {
   const [due, setDue] = useState(false);
   const [soon, setSoon] = useState(false);
@@ -88,7 +89,7 @@ const ListPerson = ({
       }
       return `${days}d`;
     }
-    if (weeks < 4) {
+    if (weeks < 3) {
       if (soon) {
         setSoon(false);
       }
@@ -153,6 +154,18 @@ const ListPerson = ({
             updatePerson: updatePerson,
             deletePerson: deletePerson,
             undoContact: undoContact,
+            updatePushNotification: updatePushNotification,
+            isLongPress: false,
+          })
+        }
+        onLongPress={() =>
+          navigation.navigate('Person Info', {
+            person: person,
+            updatePerson: updatePerson,
+            deletePerson: deletePerson,
+            undoContact: undoContact,
+            updatePushNotification: updatePushNotification,
+            isLongPress: true,
           })
         }
         style={[

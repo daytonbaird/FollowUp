@@ -17,20 +17,33 @@ import {styles} from '../../styles/global';
 
 //Modals
 import EditPerson from '../modals/EditPerson';
+import ManuallySchedule from '../modals/ManuallySchedule';
 
 //Modules
 const PersonInfo = ({route, navigation}) => {
+  //Route Parameters
   const {person} = route.params;
   const {updatePerson} = route.params;
   const {deletePerson} = route.params;
   const {undoContact} = route.params;
+  const {updatePushNotification} = route.params;
+  const {isLongPress} = route.params;
+
   let appearance = Appearance.getColorScheme();
 
-  const [isEditVisible, setEditVisible] = useState(false);
   let isComplete = person.complete;
 
+  //Modals
+  const [isEditVisible, setEditVisible] = useState(false);
   const toggleEditVisible = () => {
     setEditVisible(previousState => !previousState);
+  };
+
+  const [isManuallyScheduleVisible, setIsManuallyScheduleVisible] = useState(
+    isLongPress,
+  );
+  const toggleManuallyScheduleVisible = () => {
+    setIsManuallyScheduleVisible(previousState => !previousState);
   };
 
   const navToFollowUp = () => {
@@ -40,16 +53,25 @@ const PersonInfo = ({route, navigation}) => {
   const personInfoActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Cancel', 'Edit Person', 'Undo Contact', 'Delete Person'],
+        options: [
+          'Cancel',
+          'Schedule Next Contact',
+          'Edit Person',
+          'Undo Contact',
+          'Delete Person',
+        ],
         cancelButtonIndex: 0,
         destructiveButtonIndex: 3,
       },
       buttonIndex => {
         if (buttonIndex === 1) {
+          toggleManuallyScheduleVisible();
+        }
+        if (buttonIndex === 2) {
           toggleEditVisible();
-        } else if (buttonIndex === 2) {
-          undoContact(person);
         } else if (buttonIndex === 3) {
+          undoContact(person);
+        } else if (buttonIndex === 4) {
           deletePerson(person.id, navToFollowUp);
         }
       },
@@ -130,6 +152,14 @@ const PersonInfo = ({route, navigation}) => {
         oldPerson={person}
         toggleEditVisible={toggleEditVisible}
         updatePerson={updatePerson}
+      />
+      <ManuallySchedule
+        isVisible={isManuallyScheduleVisible}
+        oldPerson={person}
+        toggleManuallyScheduleVisible={toggleManuallyScheduleVisible}
+        generatePrettyNotificationTime={generatePrettyNotificationTime}
+        updatePerson={updatePerson}
+        updatePushNotification={updatePushNotification}
       />
       {/* Header */}
       <View style={styles.personInfoHeaderView}>
